@@ -8,7 +8,7 @@ O'clock a lancé il y a maintenant plus d'un an sa plateforme de séries origina
 
 Pas si vite ! Vous n'êtes pas là pour en bénéficier mais plutôt pour rendre un précieux service à la team marketing :smiling_imp:.
 
-Notre plateforme pas comme les autres a la particularité de récolter des informations stratégiques sur qui visionne quoi. 
+Notre plateforme pas comme les autres a la particularité de récolter des informations stratégiques sur qui visionne quoi.
 
 On préfère le préciser tout de suite, c'est évidemment parce que nous sommes des visionnaires et que nous sommes pragmatiques : à quoi vous sert votre vie privée si les séries qu'on vous propose ne vous intéressent pas ? Attention, ça peut paraître évident mais nos concurrents n'oseraient jamais faire ça, bien entendu :angel:
 
@@ -28,26 +28,29 @@ Le fichier `data.sql` est fourni, il crée une unique table nommée `viewing` et
 
 Créez une base de données et un utilisateur propriétaire en suivant la procédure habituelle, exécutez le script puis jetez un oeil à la structure de la table.
 
-D'autre part, créez dans ce repo un fichier `sql.md`, dans lequel vous pourrez écrire les magnifiques requêtes créés pendant ce challenge. (parce que bon, elle vont être plutôt balèze, ça serait dommage de les oublier !)
+D'autre part, créez dans ce repo un fichier `sql.md`, dans lequel vous pourrez écrire les magnifiques requêtes créés pendant ce challenge. (parce que bon, elles vont être plutôt balèzes, ça serait dommage de les oublier !)
 
 ## Regarder un bout des données
 
 Écrire une requête pour récupérer les données... Pas toutes, hein, **limitez** à une quinzaine de lignes :wink:
 
 ## L'échantillonage
+
 (ou comment redécouvrir ORDER BY)
 
-Bon, on limite on limite, c'est bien, mais c'est toujours les même lignes ! 
+Bon, on limite on limite, c'est bien, mais c'est toujours les même lignes !
 
-Ce qu'il nous faudrait, c'est des lignes piochées aléatoirement. Et ça, ça s'appelle de l'échantillonnage (je vous le dis parce que pour pécho en soirée, c'est plutôt efficace).
+Ce qu'il nous faudrait, ce sont des lignes piochées aléatoirement. Et ça, ça s'appelle de l'échantillonnage (je vous le dis parce que pour pécho en soirée, c'est plutôt efficace).
 
 Pour ça, fort heureusement, il existe une fonction toute faite et elle est vachement bien nommée :sunglasses: Elle s'appelle `géraldine`... Ok, c'était une blague, elle s'appelle `random` :unamused:
 
 Essayez donc de lancer cette commande quelques fois :
+
 ```sql
 SELECT random();
 ```
-:tada: Mais c'est génial ! Mais c'est pas fini : la meilleure nouvelle, c'est qu'on peut se servir de cette fonction pour **ordonner** les données de manière aléatoire !
+
+:tada: Mais c'est génial ! Mais ce n'est pas fini : la meilleure nouvelle, c'est qu'on peut se servir de cette fonction pour **ordonner** les données de manière aléatoire !
 
 - Écrire une requête pour sélectionner toutes les données, rangées dans un ordre aléatoire
 - Écrire une requete pour récupérer 15 lignes de manière aléatoire
@@ -58,6 +61,7 @@ SELECT random();
 ```sql
 ... ORDER BY maFonction();
 ```
+
 </details>
 
 ## Le mode agrégé
@@ -70,33 +74,34 @@ BREF, ce mode ligne par ligne n'est, par contre, pas le seul mode disponible. SQ
 
 **Agréger les données**, c'est regrouper les lignes en fonction d'un ou plusieurs critères. On finit alors avec des "tas" de lignes sur lesquels on va effectuer des calculs, du dénombrement par exemple.
 
-Pour regrouper les données, on utiliser l'opérateur GROUP BY.
+Pour regrouper les données, on utilise l'opérateur GROUP BY.
 
-Essayons de récupérer l'âge des _viewers_, regroupé par pays!
+Essayons de récupérer l'âge des _viewers_, regroupé par pays !
+
 ```SQL
 SELECT
-	viewer_country,
-	viewer_age_group
+viewer_country,
+viewer_age_group
 FROM viewing
 GROUP BY viewer_country;
 ```
 
 Mince... ça marche pas.
 
-## Les fonctions d'agrégat
+Mais l'erreur, si on prend le temps de la lire, est tout de même assez explicite !
 
-Mais l'erreur, si on prend le temps de la lire, est tout de même assez explicite ! 
+> ERROR:  column "viewing.viewer_age_group" must appear in the GROUP BY clause or be used in an aggregate function.
 
-> ERROR:  column "viewing.viewer_age_group" must appear in the GROUP BY clause or be used in an aggregate function
+soit, en français :
 
-soit, en français : 
-
-> ERREUR: la colonne « viewing.viewer_age_group » doit apparaître dans la clause GROUP BY ou doit être utilisé dans une fonction d'agrégat
+> ERREUR: la colonne « viewing.viewer_age_group » doit apparaître dans la clause GROUP BY ou doit être utilisée dans une fonction d'agrégat.
 
 Une fonction d'agrégat ? Keskessé ?
 
-Et bien, note SGBD ne peut afficher qu'une seule information par champ. Or, en agrégeant nos données, on a créer des "tas".  
+Et bien, notre SGBD ne peut afficher qu'une seule information par champ. Or, en agrégeant nos données, on a créé des "tas".  
 Il faut donc définir la façon de traiter les données du tas, pour qu'elles puissent s'afficher dans un seul champ !
+
+## Les fonctions d'agrégat
 
 C'est le rôle des fonctions d'aggrégat ! En voici quelques unes :
 
@@ -105,16 +110,16 @@ C'est le rôle des fonctions d'aggrégat ! En voici quelques unes :
 - `count(champ)` permet de compter le nombre de lignes dans le tas.
 - `avg(champ)` permet de calculer la moyenne des valeurs du tas.
 
-
 Par exemple, si on veut la moyenne d'âge de tous les viewers, on peut faire :
+
 ```sql
 SELECT AVG(viewer_age_group) FROM viewing;
 ```
 
 En utilisant ces informations, écrire des requêtes pour récupérer ces informations :
 
-- la moyenne d'age des viewers, classée par pays.
-- le nombre d'épisodes regardés, classé par tranche d'âge, et rangé par tranche d'age décroissant.
+- la moyenne d'âge des viewers, classée par pays.
+- le nombre d'épisodes regardés, classé par tranche d'âge et rangé par tranche d'âge décroissant.
 - BONUS CACTUS (attention, ça parait simple mais ça pique !) : le nombre de visionnage par an.
 
 <details>
