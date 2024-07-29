@@ -33,7 +33,9 @@ Récupérer la moyenne d'âge des viewers classée par pays :
 
 ```sql
 SELECT 
-ROUND(AVG(viewer_age_group)),viewer_country  FROM viewing
+ROUND(AVG(viewer_age_group)),
+viewer_country  
+FROM viewing
 GROUP BY viewer_country ;
 ```
 
@@ -47,6 +49,8 @@ FROM viewing
 GROUP BY viewer_age_group 
 ORDER BY viewer_age_group DESC;
 ```
+
+CORRECTION : COUNT(*) AS nb_visionnage // l'étoile permet de prendre toutes les lignes.
 
 Récupérer le nombre de visionnage par an :
 
